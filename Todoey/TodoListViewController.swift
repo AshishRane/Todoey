@@ -11,10 +11,17 @@ import UIKit
 class TodoListViewController: UITableViewController {
     
     var itemArray = ["Find Mike", "Buy Eggos", "Destroy Demogorgon"]
+    
+    let defaults = UserDefaults.standard // Interface to the user default database where we store key value pairs persistently
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //Showing the persisted data
+        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+            
+            itemArray = items
+        }
     }
     
     //MARK - Tableview Datasource Methods
@@ -58,7 +65,10 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             
             //what will happen once the user clicks the add item button on our UIAlert
+            
             self.itemArray.append(textField.text!) //self because we are inside a closure. Look for IN keyword.
+            
+            self.defaults.set(self.itemArray, forKey: "TodoListArray") //self because we are inside a closure
             
             self.tableView.reloadData() //Reload data as the array now has a new value
         }
